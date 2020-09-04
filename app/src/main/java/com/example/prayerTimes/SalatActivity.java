@@ -41,6 +41,17 @@ public class SalatActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         toolbar = findViewById(R.id.topToolbar);
         countDownTv = toolbar.findViewById(R.id.next_salat_tv);
+        toolbar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getSupportFragmentManager().
+                        beginTransaction().
+                        replace(R.id.container, new AdhanFragmentWebView(), SalatListFragment.class.getCanonicalName()).
+                        show(new AdhanFragmentWebView()).
+                        addToBackStack(SalatListFragment.class.getCanonicalName()).
+                        commit();
+            }
+        });
         new WebCallThread().start();
     }
 
@@ -57,7 +68,13 @@ public class SalatActivity extends AppCompatActivity {
                 Bundle bundle = new Bundle();
                 bundle.putString("data", new Gson().toJson(salatResponseData));
                 salatListFragment.setArguments(bundle);
-                SalatActivity.this.getSupportFragmentManager().beginTransaction().replace(R.id.container, salatListFragment, SalatListFragment.class.getCanonicalName()).show(salatListFragment).addToBackStack(SalatListFragment.class.getCanonicalName()).commit();
+                getSupportFragmentManager().
+                        beginTransaction().
+                        replace(R.id.container, salatListFragment, SalatListFragment.class.getCanonicalName()).
+                        show(salatListFragment).
+                        addToBackStack(SalatListFragment.class.getCanonicalName()).
+                        commit();
+
                 findNextSalatName();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -87,7 +104,8 @@ public class SalatActivity extends AppCompatActivity {
             time = Utils.dateStringToEpoch((salatResponseData.getData().getDate().getReadable() + " " + salatResponseData.getData().getTimings().getIsha()), "dd MMM yyyy HH:mm")-today.getTimeInMillis();
             nextSalatName = "Isha";
         } else {
-
+            time = Utils.dateStringToEpoch((salatResponseData.getData().getDate().getReadable() + " " + salatResponseData.getData().getTimings().getMidnight()), "dd MMM yyyy HH:mm")-today.getTimeInMillis();
+            nextSalatName = "Midnight";
         }
 
         try {
@@ -107,6 +125,7 @@ public class SalatActivity extends AppCompatActivity {
     public void startTimer(final long time, final String nextSalatName) throws ParseException {
         final Date futureDate = new Date();
         futureDate.setTime(time);
+
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {
@@ -124,12 +143,30 @@ public class SalatActivity extends AppCompatActivity {
 
                         long seconds = TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished);
 
-                        countDownTv.setText(String.format("Next Salat:%s%02d:%02d:%02d", nextSalatName, hours, minutes, seconds));
+                        countDownTv.setText(String.format("Next Salat:%s  %02d:%02d:%02d", nextSalatName, hours, minutes, seconds));
+                        if(nextSalatName.equalsIgnoreCase("midnight")){
+                            countDownTv.setText(String.format("%s %02d:%02d:%02d", nextSalatName, hours, minutes, seconds));
+
+                        }
                     }
 
                     @Override
                     public void onFinish() {
                         findNextSalatName();
+
+                        AdhanFragmentWebView webView = new AdhanFragmentWebView();
+                        Bundle b=new Bundle();
+                        if(nextSalatName.equalsIgnoreCase("fazr"))
+                            b.putBoolean("wakt",true);
+                        else{
+                            b.putBoolean("wakt",false);
+                        }
+                        getSupportFragmentManager().
+                                beginTransaction().
+                                replace(R.id.container, webView , AdhanFragmentWebView.class.getCanonicalName()).
+                                show(webView).
+                                addToBackStack(AdhanFragmentWebView.class.getCanonicalName()).
+                                commit();
                     }
                 };
                 cdt.start();
