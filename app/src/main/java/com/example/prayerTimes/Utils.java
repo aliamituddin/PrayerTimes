@@ -15,7 +15,7 @@ public class Utils {
 
     public static long dateStringToEpoch(String str,String format) {
         try {
-            return new SimpleDateFormat(format, Locale.ROOT).parse(str).getTime();
+            return new SimpleDateFormat(format, Locale.getDefault()).parse(str).getTime();
         } catch (ParseException e) {
             e.printStackTrace();
             return 0;
