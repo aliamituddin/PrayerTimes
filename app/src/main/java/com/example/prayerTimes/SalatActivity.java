@@ -99,13 +99,12 @@ public class SalatActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
+    protected void onDestroy() {
+        super.onDestroy();
         handler.removeCallbacksAndMessages(null);
     }
 
     public void startTimer(final long time, final String nextSalatName) throws ParseException {
-        final SalatActivity activity = this;
         final Date futureDate = new Date();
         futureDate.setTime(time);
         new Handler(Looper.getMainLooper()).post(new Runnable() {
