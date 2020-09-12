@@ -14,7 +14,7 @@ import com.example.prayerTimes.responses.SalatResponseData;
 import com.google.gson.Gson;
 import java.util.ArrayList;
 
-public class SalatListFragment extends Fragment {
+public class SalatListFragment extends Fragment{
 
 
     private SalatAdapter adapter;
@@ -39,7 +39,7 @@ public class SalatListFragment extends Fragment {
 
     private void initView() {
 
-
+        model = new ArrayList<>();
         responseData = new SalatResponseData();
         if (getArguments() != null) {
             responseData =  new Gson().fromJson(getArguments().getString("data"), SalatResponseData.class);
@@ -88,4 +88,6 @@ public class SalatListFragment extends Fragment {
         }
         adapter.addall(model);
     }
+
+
 }

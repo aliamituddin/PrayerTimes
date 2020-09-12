@@ -58,7 +58,8 @@ public class SalatAdapter extends Adapter<SalatAdapter.ViewHolder> {
 
             view.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View view) {
-                    SalatAdapter.this.listener.onItemClick(view, SalatAdapter.this.filteredData.get(ViewHolder.this.getAdapterPosition()), ViewHolder.this.getAdapterPosition());
+
+                    listener.onItemClick(view, filteredData.get(getAdapterPosition()), getAdapterPosition());
                 }
             });
         }
