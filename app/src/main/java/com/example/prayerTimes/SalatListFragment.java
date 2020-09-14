@@ -56,32 +56,32 @@ public class SalatListFragment extends Fragment{
             if (i == 0) {
                 model.add(new SalatDataModel());
                 model.get(i).setSalatName("Fajr");
-                model.get(i).setSalatStartTime(responseData.getData().getTimings().getFajr()+ " AM");
-                model.get(i).setSalatStartTimeInMS(Utils.dateStringToEpoch((responseData.getData().getTimings().getFajr()+ " AM"),"mm:ss aa"));
+                model.get(i).setSalatStartTime(responseData.getData().getTimings().getFajr());
+                model.get(i).setSalatStartTimeInMS(Utils.dateStringToEpoch((responseData.getData().getTimings().getFajr()),"hh:mm"));
 
             } else if (i == 1) {
                 model.add(new SalatDataModel());
                 model.get(i).setSalatName("Dhuhr");
-                model.get(i).setSalatStartTime(responseData.getData().getTimings().getDhuhr()+ " PM");
-                model.get(i).setSalatStartTimeInMS(Utils.dateStringToEpoch((responseData.getData().getTimings().getDhuhr()+ " AM"),"mm:ss aa"));
+                model.get(i).setSalatStartTime(responseData.getData().getTimings().getDhuhr());
+                model.get(i).setSalatStartTimeInMS(Utils.dateStringToEpoch((responseData.getData().getTimings().getDhuhr()),"hh:mm"));
 
             } else if (i == 2) {
                 model.add(new SalatDataModel());
                 (model.get(i)).setSalatName("Asr");
-                model.get(i).setSalatStartTime(responseData.getData().getTimings().getAsr()+" PM");
-                model.get(i).setSalatStartTimeInMS(Utils.dateStringToEpoch((responseData.getData().getTimings().getAsr()+ " AM"),"mm:ss aa"));
+                model.get(i).setSalatStartTime(responseData.getData().getTimings().getAsr());
+                model.get(i).setSalatStartTimeInMS(Utils.dateStringToEpoch((responseData.getData().getTimings().getAsr()),"hh:mm"));
 
             } else if (i == 3) {
                 model.add(new SalatDataModel());
                 (model.get(i)).setSalatName("Maghrib");
-                (model.get(i)).setSalatStartTime(responseData.getData().getTimings().getMaghrib()+" PM");
-                model.get(i).setSalatStartTimeInMS(Utils.dateStringToEpoch((responseData.getData().getTimings().getMaghrib()+ " AM"),"mm:ss aa"));
+                (model.get(i)).setSalatStartTime(responseData.getData().getTimings().getMaghrib());
+                model.get(i).setSalatStartTimeInMS(Utils.dateStringToEpoch((responseData.getData().getTimings().getMaghrib()),"hh:mm"));
 
             } else if (i == 4) {
                 model.add(new SalatDataModel());
                 (model.get(i)).setSalatName("Isha");
-                (model.get(i)).setSalatStartTime(responseData.getData().getTimings().getIsha()+ " PM");
-                model.get(i).setSalatStartTimeInMS(Utils.dateStringToEpoch((responseData.getData().getTimings().getIsha()+ " AM"),"mm:ss aa"));
+                (model.get(i)).setSalatStartTime(responseData.getData().getTimings().getIsha());
+                model.get(i).setSalatStartTimeInMS(Utils.dateStringToEpoch((responseData.getData().getTimings().getIsha()),"hh:mm"));
             }
             (model.get(i)).setSalatId(i+1);
             i++;

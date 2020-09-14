@@ -39,6 +39,7 @@ public class SalatActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         toolbar = findViewById(R.id.topToolbar);
         countDownTv = toolbar.findViewById(R.id.next_salat_tv);
+
         toolbar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -51,6 +52,14 @@ public class SalatActivity extends AppCompatActivity {
             }
         });
         new WebCallThread().start();
+    }
+
+    public void hideToolBar(boolean hide){
+        if(hide)
+            toolbar.setVisibility(View.GONE);
+        else{
+            toolbar.setVisibility(View.VISIBLE);
+        }
     }
 
     class WebCallThread extends Thread {
@@ -88,16 +97,16 @@ public class SalatActivity extends AppCompatActivity {
         Calendar today = Calendar.getInstance();
         if (today.getTimeInMillis() < Utils.dateStringToEpoch((salatResponseData.getData().getDate().getReadable() + " " + salatResponseData.getData().getTimings().getFajr()), "dd MMM yyyy HH:mm")) {
             time = Utils.dateStringToEpoch((salatResponseData.getData().getDate().getReadable() + " " + salatResponseData.getData().getTimings().getFajr()), "dd MMM yyyy HH:mm")-today.getTimeInMillis();
-            nextSalatName = "Fazr ";
+            nextSalatName = "Fazr";
         } else if (today.getTimeInMillis() < Utils.dateStringToEpoch((salatResponseData.getData().getDate().getReadable() + " " + salatResponseData.getData().getTimings().getDhuhr()), "dd MMM yyyy HH:mm")) {
             time = Utils.dateStringToEpoch((salatResponseData.getData().getDate().getReadable() + " " + salatResponseData.getData().getTimings().getDhuhr()), "dd MMM yyyy HH:mm")-today.getTimeInMillis();
-            nextSalatName = "Dhuhr ";
+            nextSalatName = "Dhuhr";
         } else if (today.getTimeInMillis() < Utils.dateStringToEpoch((salatResponseData.getData().getDate().getReadable() + " " + salatResponseData.getData().getTimings().getAsr()), "dd MMM yyyy HH:mm")) {
             time = Utils.dateStringToEpoch((salatResponseData.getData().getDate().getReadable() + " " + salatResponseData.getData().getTimings().getAsr()), "dd MMM yyyy HH:mm")-today.getTimeInMillis();
-            nextSalatName = "Asr ";
+            nextSalatName = "Asr";
         } else if (today.getTimeInMillis() < Utils.dateStringToEpoch((salatResponseData.getData().getDate().getReadable() + " " + salatResponseData.getData().getTimings().getMaghrib()), "dd MMM yyyy HH:mm")) {
             time = Utils.dateStringToEpoch((salatResponseData.getData().getDate().getReadable() + " " + salatResponseData.getData().getTimings().getMaghrib()), "dd MMM yyyy HH:mm")-today.getTimeInMillis();
-            nextSalatName = "Maghrib ";
+            nextSalatName = "Maghrib";
         } else if (today.getTimeInMillis() < Utils.dateStringToEpoch((salatResponseData.getData().getDate().getReadable() + " " + salatResponseData.getData().getTimings().getIsha()), "dd MMM yyyy HH:mm")) {
             time = Utils.dateStringToEpoch((salatResponseData.getData().getDate().getReadable() + " " + salatResponseData.getData().getTimings().getIsha()), "dd MMM yyyy HH:mm")-today.getTimeInMillis();
             nextSalatName = "Isha";
@@ -108,7 +117,7 @@ public class SalatActivity extends AppCompatActivity {
 
         try {
             startTimer(time, nextSalatName);
-        } catch (ParseException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -120,13 +129,14 @@ public class SalatActivity extends AppCompatActivity {
         handler.removeCallbacksAndMessages(null);
     }
 
-    public void startTimer(final long time, final String nextSalatName) throws ParseException {
+    public void startTimer(final long time, final String nextSalatName) {
         final Date futureDate = new Date();
         futureDate.setTime(time);
 
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {
+
                 CountDownTimer cdt = new CountDownTimer(time, 1000) {
                     @Override
                     public void onTick(long millisUntilFinished) {
@@ -141,16 +151,15 @@ public class SalatActivity extends AppCompatActivity {
 
                         long seconds = TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished);
 
-                        countDownTv.setText(String.format("Next Salat:%s  %02d:%02d:%02d", nextSalatName, hours, minutes, seconds));
+                        countDownTv.setText(String.format("Next Salat: %s  %02d:%02d:%02d", nextSalatName, hours, minutes, seconds));
                         if(nextSalatName.equalsIgnoreCase("midnight")){
                             countDownTv.setText(String.format("%s %02d:%02d:%02d", nextSalatName, hours, minutes, seconds));
-
                         }
                     }
 
                     @Override
                     public void onFinish() {
-                        findNextSalatName();
+
 
                         AdhanFragmentWebView webView = new AdhanFragmentWebView();
                         Bundle b=new Bundle();
@@ -158,6 +167,11 @@ public class SalatActivity extends AppCompatActivity {
                             b.putBoolean("wakt",true);
                         else{
                             b.putBoolean("wakt",false);
+                        }
+                        if(nextSalatName.equalsIgnoreCase("midnight")){
+                            new WebCallThread().start();
+                        }else{
+                            findNextSalatName();
                         }
                         getSupportFragmentManager().
                                 beginTransaction().
